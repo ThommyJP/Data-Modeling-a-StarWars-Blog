@@ -8,23 +8,44 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
+class Users(Base):
+    __tablename__ = 'users'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    password = Column(String(250), nullable=False)
+    user_fav = relationship('favorites', backref='users', lazy=True)
 
-class Address(Base):
-    __tablename__ = 'address'
+class Planets(Base):
+    __tablename__ = 'planets'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    p_name = Column(String(250), nullable=False)
+    population = Column(String(250), nullable=False)
+    terrain = Column(String(250), nullable=False)
+    planet_fav = relationship('favorites', backref='planets', lazy=True)
+
+class Characters(Base):
+    __tablename__ = 'characters'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    gender = Column(String(250), nullable=False)
+    eye_color = Column(String(250), nullable=False)
+    hair_color = Column(String(250), nullable=False)
+    char_fav = relationship('favorites', backref='characters', lazy=True)
+
+class Favorites(Base):
+    __tablename__ = 'favorites'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    planets_id = Column(Integer, ForeignKey('planets.id'))
+    characters_id = Column(Integer, ForeignKey('characters.id'))
+    users_id = Column(Integer, ForeignKey('users.id'))
 
     def to_dict(self):
         return {}
